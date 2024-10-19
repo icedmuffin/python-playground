@@ -1,0 +1,1 @@
+simple webview, reading data from scv and show it to the page, kachaww *flashlight :p
