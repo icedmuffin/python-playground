@@ -1,0 +1,1 @@
+simple CURD, reading data from scv, all those thing realated to create, update, read, delete is implemented with best practice of data validation, kachawwwwwwwwwwww *flashlight :p
