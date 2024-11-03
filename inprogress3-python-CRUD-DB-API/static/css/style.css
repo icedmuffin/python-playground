@@ -1,24 +1,37 @@
-body{
-    font-family: serif;
+body, h1, th, td {
+    font-family: 'Gill Sans';
+    color: #383838;
+    font-weight: 300;
 }
 
-.btn-primary{
-    background-color: #68afed;
+.btn-primary {
+    font-family: 'Gill Sans', sans-serif;
+    background: none;
+    color: #BFA2DB;
+    border: 1px solid #BFA2DB;
+    padding: 1em 1em;
+    font-size: 1em;
+    border-radius: 0.2em;
+    transition: box-shadow 0.3s, transform 0.3s;
+    font-weight: 300;
+    margin-bottom: 4px;
+}
+
+.btn-primary:hover {
     border: none;
-    
+    color: #F3F1F5;
+    background-color: pink;
+    box-shadow: 0.4em 0.4em 0em 0.01em #BFA2DB;
+    transform: translateY(-0.3em);
+    cursor: pointer;
 }
 
-.btn-primary:hover{
-    background-color: #4280b6;
-    border: none;
-    
+.btn-primary:active {
+    background-color: #F3F1F5;
+    color: rgb(107, 120, 193);
 }
 
-.botton-list form{
-    display: inline-block;
-    margin-right: 10px;
-}
-
-h1,thead th{
+h1,
+thead th {
     text-align: center;
 }

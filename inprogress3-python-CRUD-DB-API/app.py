@@ -12,7 +12,7 @@ connection_pool = pool.SimpleConnectionPool(
     user="",
     password=""
 )
-  
+ 
 
 def get_connection():
     try :
@@ -84,6 +84,7 @@ def edit_page(id):
     book = db_get_specific_book_data(id)
     return render_template("edit.html", book = book)
 
+
 @app.route("/getBooks", methods=['GET'])
 def api_get_books():
     books = db_get_book_data()
@@ -98,6 +99,7 @@ def api_get_books():
     }
     
     return jsonify(books_json), 200
+
 
 @app.route("/addBook", methods=['POST'])
 def api_add_book():
@@ -120,6 +122,7 @@ def api_add_book():
     else :
         return jsonify({"message": db_response}), 500
 
+
 @app.route("/deleteBook", methods=['POST'])
 def api_delete_book():
     data = request.get_json()
@@ -141,6 +144,7 @@ def api_delete_book():
     status_code = 200 if message == "success" else 400
     return jsonify({"message": message}), status_code
 
+
 @app.route("/updateBook", methods=['POST'])
 def api_update_book():
     data = request.get_json()
@@ -157,8 +161,8 @@ def api_update_book():
     status_code = 200 if message == "success" else 400
 
     return jsonify({"message" : message}), status_code
+   
 
-    
 def db_save_existing_table_to_scv():
     books = db_get_book_data()
     df = pd.DataFrame(books)
@@ -167,6 +171,7 @@ def db_save_existing_table_to_scv():
         
     
     return books
+
 
 def db_get_book_data():
     try :
@@ -186,6 +191,7 @@ def db_get_book_data():
         if connection:
             connection_pool.putconn(connection)
 
+
 def db_get_specific_book_data(id):
     try :
         connection = get_connection()
@@ -202,6 +208,7 @@ def db_get_specific_book_data(id):
     finally:
         if connection:
             connection_pool.putconn(connection)
+
 
 def get_and_validate_book_data(id, title, author, price):
     errors = []
