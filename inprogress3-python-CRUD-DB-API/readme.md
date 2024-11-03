@@ -1,0 +1,1 @@
+simple REST API CURD, reading data from Database, all those thing realated to create, update, read, delete is implemented with best practice of data validation, kachawwwwwwwwwwww *flashlight :p
