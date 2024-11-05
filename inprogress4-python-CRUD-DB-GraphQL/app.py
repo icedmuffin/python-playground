@@ -2,23 +2,88 @@ from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import logging
 from psycopg2 import pool, OperationalError
+import strawberry
+from strawberry.flask.views import GraphQLView
+from typing import Optional, List
 
 app = Flask(__name__)
 
 connection_pool = pool.SimpleConnectionPool(
-   1, 20, 
+    1, 20, 
     host="127.0.0.1",
     database="books_db",
     user="",
     password=""
 )
- 
+
 
 def get_connection():
-    try :
+    try:
         return connection_pool.getconn()
     except OperationalError as e:
         logging.error(f"Operational error {e}")
+
+# Define GraphQL types directly as Python classes
+@strawberry.type
+class Book:
+    id: int
+    title: str
+    author: str
+    price: float
+
+# Define GQL query class with resolvers
+@strawberry.type
+class Query:
+    @strawberry.field
+    def books(self) -> list[Book]:
+        book_data = db_get_book_data()
+        
+        return [
+            Book(
+                id=book["id"],
+                title=book["title"],
+                author=book["author"],
+                price=book["price"]
+            )
+            for book in book_data
+        ]
+    
+    @strawberry.field
+    def getBook(self, id: Optional[int] = None, 
+                title: Optional[str] = None, 
+                author: Optional[str] = None, 
+                price:Optional[float] = None) -> List[Book]:
+        
+        book_data = db_get_book_data()
+
+        if title:
+            book_data = [book for book in book_data if title.lower() in book["title"].lower()]
+        
+        if author:
+            book_data = [book for book in book_data if author.lower() in book["author"].lower()]
+
+        if id != None:
+            book_data = [book for book in book_data if id == book['id']]
+        
+        if price != None:
+            book_data = [book for book in book_data if price == book['price']]
+
+
+        return [
+            Book(
+                id=book["id"],
+                title=book["title"],
+                author=book["author"],
+                price=book["price"]
+            )
+            for book in book_data
+        ]
+
+
+schema = strawberry.Schema(query=Query)
+
+# Add the GraphQL route
+app.add_url_rule("/graphql", view_func=GraphQLView.as_view("graphql_view", schema=schema))
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -293,4 +358,5 @@ def db_update_book(id, title, author, price):
 
     return message
 
-
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)
