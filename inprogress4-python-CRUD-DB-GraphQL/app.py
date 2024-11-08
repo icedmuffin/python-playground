@@ -31,6 +31,11 @@ class Book:
     author: str
     price: float
 
+@strawberry.type
+class GQLResponse:
+    messege: str
+    code: int
+
 # Define GQL query class with resolvers
 @strawberry.type
 class Query:
@@ -78,6 +83,52 @@ class Query:
             )
             for book in book_data
         ]
+
+
+    @strawberry.field
+    def deleteBook(self, id:int) -> GQLResponse:
+        messege = db_delete_book(id)
+
+        if messege == "success" :
+            code = 200
+        else :
+            code = 500
+        
+        return GQLResponse(
+            messege=messege,
+            code=code
+        )
+    
+
+    @strawberry.field
+    def addBook(self, title:str, author:str, price:int) -> GQLResponse:
+        messege = db_add_book(title, author, price)
+
+        if messege == "success" :
+            code = 200
+        else :
+            code = 500
+        
+        return GQLResponse(
+            messege=messege,
+            code=code
+        )
+
+
+    @strawberry.field
+    def updateBook(self, id:int, title:str, author:str, price:int) -> GQLResponse:
+        messege = db_update_book(id, title, author, price)
+
+        if messege == "success" :
+            code = 200
+        else :
+            code = 500
+        
+        return GQLResponse(
+            messege=messege,
+            code=code
+        )
+
 
 
 schema = strawberry.Schema(query=Query)
