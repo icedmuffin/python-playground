@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: books_db
+    ports:
+      - "5432:5432"
+    volumes:
+       - ./books.sql:/docker-entrypoint-initdb.d/books.sql
+  app:
+    build: .
+    command: flask run
+    environment:
+      FLASK_APP: app.py
+      FLASK_ENV: development
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+ 
+
