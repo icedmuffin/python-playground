@@ -2,9 +2,7 @@ anyio==4.6.2.post1
 blinker==1.8.2
 click==8.1.7
 Flask==3.0.3
-graphql-core==3.2.3
-graphql-relay==3.2.0
-graphql-server-core==1.2.0
+graphql-core==3.2.5
 h11==0.14.0
 idna==3.10
 itsdangerous==2.2.0

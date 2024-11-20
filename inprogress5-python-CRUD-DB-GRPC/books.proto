@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package books;
+
+service Books {
+    rpc GetBooks(GetBooksRequest) returns (GetBooksResponse) {}
+    rpc GetBookById(GetBookByIdRequest) returns (GetBookByIdResponse) {}
+    rpc AddBook(AddBookRequest) returns (AddBookResponse) {}
+    rpc DeleteBook(DeleteBookRequest) returns (DeleteBookResponse) {}
+    rpc EditBook(EditBookRequest) returns (EditBookResponse) {}
+}
+
+// GetBooks
+
+message GetBooksRequest {
+    
+}
+
+message GetBooksResponse {
+    repeated Book books = 1;
+}
+
+message Book {
+    int64 id = 1;
+    string title = 2;
+    string author = 3;
+    double price = 4;
+}
+
+
+// GetBookById 
+
+message GetBookByIdRequest {
+    int64 id = 1;
+}
+
+message GetBookByIdResponse {
+    Book book = 1;
+}
+
+// AddBook
+
+message AddBookRequest {
+    string title = 1;
+    string author = 2;
+    int64 price = 3;
+}
+
+message AddBookResponse {
+    GeneralResponse response = 1;
+}
+
+message GeneralResponse {
+    string message = 1;
+    int32 code = 2;
+}
+
+
+// DeleteBook
+
+message DeleteBookRequest {
+    int64 id = 1;
+}
+
+message DeleteBookResponse {
+    GeneralResponse response = 1;
+}
+
+
+// EditBook
+message EditBookRequest {
+    int64 id = 1;
+    string title = 2;
+    string author = 3;
+    int64 price = 4;
+
+}
+
+// EditBook
+message EditBookResponse {
+    GeneralResponse response = 1;
+
+}
