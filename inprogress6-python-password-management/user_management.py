@@ -1,12 +1,11 @@
-import hashlib
-import secrets
 from psycopg2 import pool, OperationalError
 import logging
+from bcrypt import hashpw, gensalt, checkpw
 
 connection_pool = pool.SimpleConnectionPool(
     1, 20, 
     host="127.0.0.1",
-    database="user_management",
+    database="books_db",
     user="",
     password=""
 )
@@ -18,28 +17,74 @@ def get_connection():
         logging.error(f"Operational error {e}")
 
 
-def hash_password(password:str, salt:str):
-    password_encoded = password.encode("utf-8")
-    password_hash = hashlib.sha256(password_encoded+salt)
+# ------------
+# regisration
+# ------------
+
+
+def is_user_already_exist(username:str, email:str) -> bool:
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor :
+            cursor.execute("select username from public.user_management where username = %s or email = %s", (username, email))
+            data = cursor.fetchone()
+    except Exception as e :
+        return f"Execption error {e}"
+    finally:
+        if connection:
+            connection_pool.putconn(connection)
+
+    if data[0] != None :
+        is_exist = True
+    else:
+        is_exist = False
+
+    return is_exist
+
     
-    return password_hash.hexdigest()
+
+def db_save_password(username:str, email:str, password:str):
+    # check is user already exist 
+    user_exist = is_user_already_exist(username=username, email=email)
+
+    if user_exist:
+        return "user already registered"
+    
+
+    password_hash = hashpw(password.encode(), gensalt())
+
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor :
+            cursor.execute("INSERT INTO public.user_management (username,email,password) VALUES (%s,%s,%s);", 
+                           (username,email,password_hash.decode()))
+        connection.commit()
+    except Exception as e:
+        return f"Exception error {e}"
+    finally:
+        if connection:
+            connection_pool.putconn(connection)
+        
+    return "user successfully registered"
 
 
-def generate_random_salt():
-    return secrets.token_hex(5)
+# ------------
+# login
+# ------------
+
+def check_password(username:str, given_password:str) -> bool:
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor :
+            cursor.execute("select password from public.user_management where username = %s;", (username,))
+            data = cursor.fetchone()
+            hash_password = data[0].encode()
+    except Exception as e:
+        return f"Exception error {e}"
+    finally:
+        if connection:
+            connection_pool.putconn(connection)
+
+    return checkpw(given_password.encode(), hash_password)
 
 
-def db_save_password(username:str, password:str):
-    user_salt = generate_random_salt
-    salt_password_hash = hash_password(password=password, salt=user_salt)
-
-
-
-
-
-
-my_password = "test"
-my_salt = generate_random_salt()
-print(my_password)
-print(my_salt)
-print(hash_password(my_password, my_salt))

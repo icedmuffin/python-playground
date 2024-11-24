@@ -24,7 +24,10 @@ def get_connection():
     except OperationalError as e:
         logging.error(f"Operational error {e}")
 
-# Define GraphQL types directly as Python classes
+
+# ------------
+# GQL type class
+# ------------
 @strawberry.type
 class Book:
     id: int
@@ -37,7 +40,10 @@ class GQLResponse:
     messege: str
     code: int
 
-# Define GQL query class with resolvers
+# ------------
+# GQL GQL query class with resolvers
+# ------------
+
 @strawberry.type
 class Query:
     @strawberry.field
@@ -204,7 +210,20 @@ def edit_page(id):
 
 @app.route("/register", methods=['POST', 'GET'])
 def register():
-    return render_template('register.html')
+    if request.method == 'POST':
+        # get username and password
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+
+        # save username and password to db
+        response = user_management.db_save_password(username=username, email=email, password=password)
+
+        return render_template('register.html')
+    
+    else :
+        return render_template('register.html')
 
 # -----------------
 # Rest api
