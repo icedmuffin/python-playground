@@ -26,7 +26,7 @@ def is_user_already_exist(username:str, email:str) -> bool:
     try:
         connection = get_connection()
         with connection.cursor() as cursor :
-            cursor.execute("select username from public.user_management where username = %s or email = %s", (username, email))
+            cursor.execute("select 1 from public.user_management where username = %s or email = %s", (username, email))
             data = cursor.fetchone()
     except Exception as e :
         return f"Execption error {e}"
@@ -34,12 +34,8 @@ def is_user_already_exist(username:str, email:str) -> bool:
         if connection:
             connection_pool.putconn(connection)
 
-    if data[0] != None :
-        is_exist = True
-    else:
-        is_exist = False
-
-    return is_exist
+    
+    return data is not None
 
     
 

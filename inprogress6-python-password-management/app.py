@@ -216,14 +216,25 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
 
+        print(f"data :{username, email, password}")
+
 
         # save username and password to db
         response = user_management.db_save_password(username=username, email=email, password=password)
 
-        return render_template('register.html')
+        if response == "user successfully registered":
+            username = None
+            email = None
+            password = None
+
+        saved_data={'username':username, 'email':email, 'password':password}
+
+
+
+        return render_template('register.html', response=response, saved_data=saved_data)
     
     else :
-        return render_template('register.html')
+        return render_template('register.html', saved_data=None)
 
 # -----------------
 # Rest api

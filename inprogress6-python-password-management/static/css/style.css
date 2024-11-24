@@ -4,12 +4,23 @@ body, h1, th, td {
     font-weight: 300;
 }
 
+.registration-box{
+    max-width: 500px;
+}
+
+.registration-box-notification{
+    text-align: center;
+    background-color: #ddeef9;
+    border-radius: 0.1em;
+    color: #3e4357;
+}
+
 .btn-primary {
     font-family: 'Gill Sans', sans-serif;
     background: none;
     color: #BFA2DB;
     border: 1px solid #BFA2DB;
-    padding: 1em 1em;
+    padding: 0.5em 1em;
     font-size: 1em;
     border-radius: 0.2em;
     transition: box-shadow 0.3s, transform 0.3s;
@@ -21,8 +32,8 @@ body, h1, th, td {
     border: none;
     color: #F3F1F5;
     background-color: pink;
-    box-shadow: 0.4em 0.4em 0em 0.01em #BFA2DB;
-    transform: translateY(-0.3em);
+    box-shadow: 0.3em 0.3em 0em 0.01em #BFA2DB;
+    transform: translateY(-0.2em);
     cursor: pointer;
 }
 
